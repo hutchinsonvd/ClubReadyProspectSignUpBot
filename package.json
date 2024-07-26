@@ -1,0 +1,29 @@
+{
+  "name": "clubreadybot",
+  "version": "1.0.0",
+  "description": "slack bot to register prospects to club ready",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hutchinsonvd/ClubReadyProspectSignUpBot.git"
+  },
+  "keywords": [
+    "kitty",
+    "kat"
+  ],
+  "author": "hutchinsonvd",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hutchinsonvd/ClubReadyProspectSignUpBot/issues"
+  },
+  "homepage": "https://github.com/hutchinsonvd/ClubReadyProspectSignUpBot#readme",
+  "dependencies": {
+    "@slack/bolt": "^3.19.0",
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5"
+  },
+  "type": "module"
+}
