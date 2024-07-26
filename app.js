@@ -1,6 +1,8 @@
 import bolt from "@slack/bolt";
 import dotenv from 'dotenv';
 import axios from 'axios';
+import express from 'express'
+
 
 dotenv.config();
 
@@ -18,6 +20,9 @@ const NAME = "Name: ";
 const PHONE = "Phone Number: "
 const NOT_FOUND = -1;
 const STORE_ID = process.env.STORE_ID;
+const port = process.env.PORT || 8080;
+const e = express();
+e.listen(port); //have to do this for render to not shit itself
 
 console.log(process.env.SOCKET_TOKEN);
 console.log(process.env.SLACK_BOT_TOKEN);
