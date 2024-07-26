@@ -8,6 +8,7 @@ const {App} = bolt;
 const CHANNEL = process.env.CHANNEL_ID;
 const EMAIL_BOT_ID = process.env.TARGET_BOT_ID;
 const SUBTYPE = process.env.SUBTYPE;
+const CHANNEL_HELPER = process.env.CHANNEL_HELPER;
 
 const CLUB_READY_API_URL = process.env.CLUB_READY_URL;
 const CLUB_READY_API_KEY = process.env.CLUB_READY_API_KEY;
@@ -30,6 +31,19 @@ const app = new App({
     await app.start();
     console.log('⚡️ Bolt app started');
   })();
+
+  var p = {
+    APIKey: 'f93e65b7-c1b0-45ae-ab31-c75179bd650f',
+    firstName: 'Test',
+    lastName: 'DONT ADD ME 7',
+    Gender: 'U',
+    PromotionalSMSOptInAnastasiaFitness: 1,
+    WelcomeEmail: 1,
+    Email: 'TESTTEST@yahoo.com',
+    Cellphone: '9041231234'
+  }
+
+  sendProspectToClubReady(p);
 
 app.event('message', async ({ event, client, context }) => {
  
@@ -92,7 +106,38 @@ async function sendProspectToClubReady(prospect) {
       axios({method: 'post',
         url: CLUB_READY_API_URL,
         data: body
-      }).then(response => console.log(response));
+      }).then(response => {
+        console.log(response);
+        console.log(response.data.StatusCode)
+
+   
+
+      app.client.chat.postMessage({
+        "channel": CHANNEL,
+        "text" : makeChatMessage(prospect, response)
+        });
+    });
+}
+
+function makeChatMessage(prospect, response) {
+
+    var success = true;
+        if (200 != response.data.StatusCode) {
+            success = false;
+        } 
+
+    if (!success) {
+
+        if (response.data.Message = 'Prospect already exists') {
+
+            return "Did not register prosect: " + prospect.firstName + " " + prospect.lastName + " because they are already registered. How strange";
+        }
+
+        return "Unsuccessfully registered prospect: " + prospect.firstName + " " + prospect.lastName + ". <" + CHANNEL_HELPER +  "> please assist.";
+    }
+
+
+    return "Succesfully registered prospect: " + prospect.firstName + " " + prospect.lastName;
 }
 
 function parseText(text) {
