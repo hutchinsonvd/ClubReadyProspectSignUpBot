@@ -20,6 +20,7 @@ const NOT_FOUND = -1;
 const STORE_ID = process.env.STORE_ID;
 
 console.log(process.env.SOCKET_TOKEN);
+console.log(process.env.SLACK_BOT_TOKEN);
 
 const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
@@ -31,19 +32,6 @@ const app = new App({
     await app.start();
     console.log('⚡️ Bolt app started');
   })();
-
-  var p = {
-    APIKey: 'f93e65b7-c1b0-45ae-ab31-c75179bd650f',
-    firstName: 'Test',
-    lastName: 'DONT ADD ME 7',
-    Gender: 'U',
-    PromotionalSMSOptInAnastasiaFitness: 1,
-    WelcomeEmail: 1,
-    Email: 'TESTTEST@yahoo.com',
-    Cellphone: '9041231234'
-  }
-
-  sendProspectToClubReady(p);
 
 app.event('message', async ({ event, client, context }) => {
  
