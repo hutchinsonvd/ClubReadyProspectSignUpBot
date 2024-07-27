@@ -90,7 +90,8 @@ async function sendProspectToClubReady(prospect) {
         LastName: prospect.lastName,
         Email: prospect.Email,
         Phone: prospect.Cellphone,
-        SendEmail: true
+        SendEmail: true,
+        ProspectTypeId: 56520
       };
 
       console.log(body);
