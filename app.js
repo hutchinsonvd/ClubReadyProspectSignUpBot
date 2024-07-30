@@ -100,7 +100,7 @@ async function sendProspectToClubReady(prospect) {
         url: POST_PROSPECT_URL,
         data: body
     }).then(response => {
-        console.log(response);
+        //console.log(response);
         console.log(response.data.StatusCode)
 
    
@@ -115,8 +115,6 @@ async function sendProspectToClubReady(prospect) {
 }
 
 async function getPreExistingProspect(prospect) {
-
-    
 
       var url = GET_PROSPECT_QUERY_STRING.format(CLUB_READY_API_KEY, prospect.firstName, prospect.lastName, STORE_ID, prospect.Email);
 
@@ -170,7 +168,7 @@ async function makeChatMessage(prospect, response) {
 
         if (response.data.Message = 'Prospect already exists') {
 
-            return await getPreExistingProspect();
+            return await getPreExistingProspect(prospect);
         }
 
         return "Unsuccessfully registered prospect: " + prospect.firstName + " " + prospect.lastName + ". <" + CHANNEL_HELPER +  "> please assist.";
