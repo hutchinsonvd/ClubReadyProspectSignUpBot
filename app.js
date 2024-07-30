@@ -13,6 +13,8 @@ const SUBTYPE = process.env.SUBTYPE;
 const CHANNEL_HELPER = process.env.CHANNEL_HELPER;
 
 const POST_PROSPECT_URL = process.env.POST_PROSPECT_URL;
+const PUT_PROSPECT_URL = process.env.PUT_PROSPECT_URL;
+
 const CLUB_READY_API_KEY = process.env.CLUB_READY_API_KEY;
 
 const EMAIL = "Email: ";
@@ -114,15 +116,7 @@ async function sendProspectToClubReady(prospect) {
 
 async function getPreExistingProspect(prospect) {
 
-    var body = {
-        ApiKey: CLUB_READY_API_KEY,
-        StoreId: STORE_ID,
-        FirstName: prospect.firstName,
-        LastName: prospect.lastName,
-        Email: prospect.Email,
-        Phone: prospect.Cellphone,
-        ProspectTypeId: WEB_PROSPECT_TYPE_NUMBER
-      };
+    
 
       var url = GET_PROSPECT_QUERY_STRING.format(CLUB_READY_API_KEY, prospect.firstName, prospect.lastName, STORE_ID, prospect.Email);
 
@@ -130,6 +124,7 @@ async function getPreExistingProspect(prospect) {
         url: url
       }).then(response => {
       
+        console.log(response);
         var results = response.data.users;
 
         if (1 < results.length) {
@@ -140,9 +135,23 @@ async function getPreExistingProspect(prospect) {
 
             return "Couldn't find a prospect with provided  name: " + prospect.firstName + " " + prospect.lastName;
         }
+
+        var userId = results[0].UserId;
+
+        var body = {
+            ApiKey: CLUB_READY_API_KEY,
+            StoreId: STORE_ID,
+            UserId: userId,
+            FirstName: prospect.firstName,
+            LastName: prospect.lastName,
+            Email: prospect.Email,
+            Phone: prospect.Cellphone,
+            ProspectTypeId: WEB_PROSPECT_TYPE_NUMBER
+          };
+        
     
         axios({method: 'post',
-            url: POST_PROSPECT_URL,
+            url: PUT_PROSPECT_URL.format(userId),
             data: body
         }).then(r => console.log(r)); 
 
