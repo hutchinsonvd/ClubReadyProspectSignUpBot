@@ -112,7 +112,7 @@ async function sendProspectToClubReady(prospect) {
     });
 }
 
-async function getPreExistingProspect(prosect) {
+async function getPreExistingProspect(prospect) {
 
     var body = {
         ApiKey: CLUB_READY_API_KEY,
