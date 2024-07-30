@@ -114,15 +114,30 @@ async function sendProspectToClubReady(prospect) {
     });
 }
 
+function buildGetURLString(prospect) {
+
+    var paramList = [CLUB_READY_API_KEY, prospect.firstName, prospect.lastName, STORE_ID, prospect.Email]
+
+    var base = GET_PROSPECT_QUERY_STRING;
+    for (var i = 0; i < paramList.length; i++) {
+
+        base = base.replace('{' + i + '}', paramList[i]);
+    }
+
+    return base;
+}
+
 async function getPreExistingProspect(prospect) {
 
-      var url = GET_PROSPECT_QUERY_STRING.format(CLUB_READY_API_KEY, prospect.firstName, prospect.lastName, STORE_ID, prospect.Email);
+      var url = buildGetURLString(prospect);
+
+      console.log("get url" + url);
 
       axios({method: 'get',
         url: url
       }).then(response => {
       
-        console.log(response);
+        console.log(response.data);
         var results = response.data.users;
 
         if (1 < results.length) {
