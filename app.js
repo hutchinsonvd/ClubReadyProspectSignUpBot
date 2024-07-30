@@ -144,7 +144,7 @@ async function getPreExistingProspect(prospect) {
             return "Multiple registered users with name: " + prospect.firstName + " " + prospect.lastName + " cannot ensure correct prospect has updated prospect type number: " + + WEB_PROSPECT_TYPE_NUMBER + ". <" + CHANNEL_HELPER +  "> please assist.";
         }
 
-        if (0 == results.length()) {
+        if (0 == results.length) {
 
             return "Couldn't find a prospect with provided  name: " + prospect.firstName + " " + prospect.lastName;
         }
