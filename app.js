@@ -184,7 +184,8 @@ async function makeChatMessage(prospect, response) {
 
         if (response.data.Message = 'Prospect already exists') {
 
-            return await getPreExistingProspect(prospect);
+            return "Prospect already exists with name: " + prospect.firstName + " " + prospect.lastName + " and email: " + prospect.Email + ". <" + CHANNEL_HELPER +  "> please assist.";
+            //return await getPreExistingProspect(prospect);
         }
 
         return "Unsuccessfully registered prospect: " + prospect.firstName + " " + prospect.lastName + ". <" + CHANNEL_HELPER +  "> please assist.";
