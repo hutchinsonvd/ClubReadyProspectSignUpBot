@@ -12,14 +12,18 @@ const EMAIL_BOT_ID = process.env.TARGET_BOT_ID;
 const SUBTYPE = process.env.SUBTYPE;
 const CHANNEL_HELPER = process.env.CHANNEL_HELPER;
 
-const CLUB_READY_API_URL = process.env.CLUB_READY_URL;
+const POST_PROSPECT_URL = process.env.POST_PROSPECT_URL;
 const CLUB_READY_API_KEY = process.env.CLUB_READY_API_KEY;
 
 const EMAIL = "Email: ";
+const GET_PROSPECT_QUERY_STRING = process.env.GET_PROSPECT_QUERY_STRING;
 const NAME = "Name: ";
 const PHONE = "Phone Number: "
+const WEB_PROSPECT_TYPE_NUMBER = 56520;
 const NOT_FOUND = -1;
 const STORE_ID = process.env.STORE_ID;
+
+
 const port = process.env.PORT || 8080;
 const e = express();
 e.listen(port); //have to do this for render to not shit itself
@@ -76,13 +80,6 @@ app.event('message', async ({ event, client, context }) => {
 
 async function sendProspectToClubReady(prospect) {
 
-    // axios.get(CLUB_READY_API_URL, {}, {headers: { "Content-Type": "application/json; charset=UTF-8" }},
-    //     {params: {
-    //         ApiKey: CLUB_READY_API_KEY,
-    //         StoreId: STORE_ID}} 
-    // )
-    // .then(response => console.log(response));
-
     var body = {
         ApiKey: CLUB_READY_API_KEY,
         StoreId: STORE_ID,
@@ -91,29 +88,69 @@ async function sendProspectToClubReady(prospect) {
         Email: prospect.Email,
         Phone: prospect.Cellphone,
         SendEmail: true,
-        ProspectTypeId: 56520
+        ProspectTypeId: WEB_PROSPECT_TYPE_NUMBER
       };
 
-      console.log(body);
-      console.log(CLUB_READY_API_URL);
+    console.log(body);
+    console.log(POST_PROSPECT_URL);
 
-      axios({method: 'post',
-        url: CLUB_READY_API_URL,
+    axios({method: 'post',
+        url: POST_PROSPECT_URL,
         data: body
-      }).then(response => {
+    }).then(response => {
         console.log(response);
         console.log(response.data.StatusCode)
 
    
-
-      app.client.chat.postMessage({
-        "channel": CHANNEL,
-        "text" : makeChatMessage(prospect, response)
-        });
+        makeChatMessage(prospect, response)
+        .then(message => {
+            app.client.chat.postMessage({
+                "channel": CHANNEL,
+                "text" : message
+                });
+        })
     });
 }
 
-function makeChatMessage(prospect, response) {
+async function getPreExistingProspect(prosect) {
+
+    var body = {
+        ApiKey: CLUB_READY_API_KEY,
+        StoreId: STORE_ID,
+        FirstName: prospect.firstName,
+        LastName: prospect.lastName,
+        Email: prospect.Email,
+        Phone: prospect.Cellphone,
+        ProspectTypeId: WEB_PROSPECT_TYPE_NUMBER
+      };
+
+      var url = GET_PROSPECT_QUERY_STRING.format(CLUB_READY_API_KEY, prospect.firstName, prospect.lastName, STORE_ID, prospect.Email);
+
+      axios({method: 'get',
+        url: url
+      }).then(response => {
+      
+        var results = response.data.users;
+
+        if (1 < results.length) {
+            return "Multiple registered users with name: " + prospect.firstName + " " + prospect.lastName + " cannot ensure correct prospect has updated prospect type number: " + + WEB_PROSPECT_TYPE_NUMBER + ". <" + CHANNEL_HELPER +  "> please assist.";
+        }
+
+        if (0 == results.length()) {
+
+            return "Couldn't find a prospect with provided  name: " + prospect.firstName + " " + prospect.lastName;
+        }
+    
+        axios({method: 'post',
+            url: POST_PROSPECT_URL,
+            data: body
+        }).then(r => console.log(r)); 
+
+        return "Updated prospect with name: " + prospect.firstName + " " + prospect.lastName + " and email: " + prospect.Email + " to prospect type number: " + WEB_PROSPECT_TYPE_NUMBER;
+    })
+}
+
+async function makeChatMessage(prospect, response) {
 
     var success = true;
         if (200 != response.data.StatusCode) {
@@ -124,7 +161,7 @@ function makeChatMessage(prospect, response) {
 
         if (response.data.Message = 'Prospect already exists') {
 
-            return "Did not register prosect: " + prospect.firstName + " " + prospect.lastName + " because they are already registered. How strange";
+            return await getPreExistingProspect();
         }
 
         return "Unsuccessfully registered prospect: " + prospect.firstName + " " + prospect.lastName + ". <" + CHANNEL_HELPER +  "> please assist.";
