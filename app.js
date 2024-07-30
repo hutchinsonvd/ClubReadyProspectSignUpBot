@@ -162,11 +162,12 @@ async function getPreExistingProspect(prospect) {
             ProspectTypeId: WEB_PROSPECT_TYPE_NUMBER
           };
         
+          var putUrl = PUT_PROSPECT_URL.replace('{0}', userId);
     
         axios({method: 'post',
-            url: PUT_PROSPECT_URL.format(userId),
+            url: putUrl,
             data: body
-        }).then(r => console.log(r)); 
+        }).then(r => console.log(r.data.StatusCode)); 
 
         return "Updated prospect with name: " + prospect.firstName + " " + prospect.lastName + " and email: " + prospect.Email + " to prospect type number: " + WEB_PROSPECT_TYPE_NUMBER;
     })
