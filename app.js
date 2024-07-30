@@ -164,7 +164,7 @@ async function getPreExistingProspect(prospect) {
         
           var putUrl = PUT_PROSPECT_URL.replace('{0}', userId);
     
-        axios({method: 'post',
+        axios({method: 'put',
             url: putUrl,
             data: body
         }).then(r => console.log(r.data.StatusCode)); 
